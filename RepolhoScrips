@@ -1,0 +1,1377 @@
+local Players = game:service("Players")
+local Player = Players.LocalPlayer
+local userInput = game:service("UserInputService")
+local runService = game:service("RunService")
+repeat wait() until Player.Character
+local Character = Player.Character
+local pHum = Character:WaitForChild("Humanoid")
+local humRoot = Character:WaitForChild("HumanoidRootPart")
+local UserInputService = game:GetService("UserInputService")
+local GuiService = game:GetService("GuiService")
+local LocalPlayer = game:GetService("Players").LocalPlayer
+local Multiplier = 0
+local intens = 0
+local VSPEED = 40
+local GV = 196.1999969482422
+local a=game.Players.LocalPlayer
+local b=a.Character
+local c=b:WaitForChild("Humanoid")
+
+for i,v in pairs(getconnections(game:GetService("Players").LocalPlayer.Idled)) do
+   v:Disable()
+end
+
+game:GetService("RunService").Stepped:Connect(function()
+    if UserInputService:IsKeyDown(Enum.KeyCode.LeftControl) then
+        local Humanoid = workspace.CurrentCamera.CameraSubject;
+        if Humanoid:IsA("Humanoid") then
+            Humanoid.SeatPart:ApplyImpulse(Humanoid.SeatPart.CFrame.LookVector * Vector3.new(intens, intens, intens))
+        elseif Humanoid:IsA("BasePart") then
+            Humanoid:ApplyImpulse(Humanoid.CFrame.LookVector * Vector3.new(intens, intens, intens))
+        end
+    end
+ end)
+
+local player = game.Players.LocalPlayer.Character
+
+if game.Players.LocalPlayer.Character == nil then
+   print("Couldn't get player name")
+end
+
+print(player, "- Got player's name..")
+
+task.wait(Random.new():NextNumber(0.05, 0.15))
+
+print("Loading gui..")
+
+local uilibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/Kiet1308/tvkhub/main/rac"))()
+local windowz = uilibrary:CreateWindow("Made by voxels86", "Oaklands [2023-2024 public]", true)
+
+local Main = windowz:CreatePage("Main")
+
+
+local Section1Main = Main:CreateSection("Main")
+
+Section1Main:CreateButton("Goto Meteor", function ()
+
+    local player = game.Players.LocalPlayer.Character
+    local part = game:GetService("Workspace").World.Effects.Smoke.Part
+    player.HumanoidRootPart.CFrame = part.CFrame
+
+    wait (1)
+
+    for _,p in pairs(game.Players:GetPlayers()) do
+
+        p.Character:WaitForChild("Humanoid").Jump = true
+        
+        end
+
+    local player = game.Players.LocalPlayer.Character
+    local part = game:GetService("Workspace").World.Effects.Crater.Torus
+    player.HumanoidRootPart.CFrame = part.CFrame
+
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Model") and v.Name == "Smoke" then
+           v:Destroy()
+        else
+            
+        end
+    end
+
+end)
+
+Section1Main:CreateToggle("Anti Spore Attack", {Toggled=false , Description = false}, function(AS)
+    shared["ANTISPORE"] = AS
+    while shared["ANTISPORE"] do
+      task.wait (0.01)
+      if not shared["ANTISPORE"] then
+          break
+      end
+    for i,v in pairs(workspace.World.Effects:GetDescendants()) do
+        if v:IsA("Part") and v.Name == "Spore" then
+            v:Destroy()
+        end
+    end
+  end
+ end)
+
+ Section1Main:CreateToggle("Walk & Drive On Water + Lava + Acid -- PERMA", {Toggled=false , Description = false}, function(FW)
+    shared["FLUIDWALK"] = FW
+    while shared["FLUIDWALK"] do
+      task.wait (0.01)
+      if not shared["FLUIDWALK"] then
+          break
+      end
+      wait(0.1)
+      for i,v in pairs(workspace.World.Ocean.Water:GetDescendants()) do
+        if v:IsA("Part") and v.Name == "Water" then
+           v.CanCollide = true
+        end
+    end
+    wait(0.1)
+    for i,v in pairs(workspace.World.Regions.Gameplay.Damage.Acid:GetDescendants()) do
+        if v:IsA("Part") and v.Name == "Acid" then
+           v.CanCollide = true
+        end
+    end
+    wait(0.1)
+    for i,v in pairs(workspace.World.Regions.Gameplay.Damage.Lava:GetDescendants()) do
+        if v:IsA("Part") and v.Name == "Lava" then
+           v.CanCollide = true
+        end
+    end
+  end
+ end)
+
+local Section2Main = Main:CreateSection("Player")
+
+Section2Main:CreateSlider("Walkspeed Multiplier -- Press Shift/Sprint", {Min = 0, Max = 5, DefaultValue = 0}, function(MP)
+    Multiplier = MP
+end)
+
+Section2Main:CreateTextbox("Vehicle CFrame -- Press L-CTRL (put above 5000)", false, function (RS)
+     intens = RS
+ end)
+
+ Section2Main:CreateButton("Activate VSpeed (click when in a car)", function ()
+    for i,v in pairs(workspace.World.Structures:GetDescendants()) do
+        if v:IsA("VehicleSeat") and v.Occupant == c then
+            e = v
+        end
+    end
+end)
+
+ Section2Main:CreateSlider("Vehicle Speed", {Min = 0, Max = 100, DefaultValue = 40}, function(VS)
+    VSPEED = VS
+
+    e.MaxSpeed = VSPEED
+end)
+
+Section2Main:CreateSlider("FOV Slider", {Min = 0, Max = 120, DefaultValue = 70}, function(FOV)
+    workspace.CurrentCamera.FieldOfView = FOV
+end)
+
+runService.Stepped:connect(function()
+    if userInput:IsKeyDown(Enum.KeyCode.LeftShift) then
+    humRoot.CFrame = humRoot.CFrame + pHum.MoveDirection * Multiplier
+    end
+    end)
+
+Section2Main:CreateButton("Infinite zoom -- Noclip zoom", function ()
+   game.Players.LocalPlayer.DevCameraOcclusionMode = "Invisicam"
+   game.Players.LocalPlayer.CameraMaxZoomDistance = 1000000000000000000000000000000000000000000000000
+end)
+
+Section2Main:CreateButton("Infinite jump", function ()
+ local InfJump = true
+ game:GetService("UserInputService").jumpRequest:Connect(function()
+     if InfJump then
+         game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass"Humanoid":ChangeState("Jumping")
+     end
+ end)
+ end)
+
+ local Section3Main = Main:CreateSection("Misc")
+
+ Section3Main:CreateSlider("Gravity Slider", {Min = 0, Max = 196.1999969482422, DefaultValue = 196.1999969482422}, function(GN)
+    GV = GN
+
+    game.Workspace.Gravity = GV
+end)
+
+ Section3Main:CreateButton("Fullbright", function ()
+   local Light = game:GetService("Lighting")
+ 
+   function dofullbright()
+   Light.Ambient = Color3.new(1, 1, 1)
+   Light.ColorShift_Bottom = Color3.new(1, 1, 1)
+   Light.ColorShift_Top = Color3.new(1, 1, 1)
+   end
+    
+   dofullbright()
+    
+   Light.LightingChanged:Connect(dofullbright)
+ end)
+
+ Section3Main:CreateButton("No fog", function ()
+
+   game.Lighting.Sky:Destroy()
+   game.Lighting.Bloom:Destroy()
+   game.Lighting.Folder:Destroy()
+   game.Lighting.Blur:Destroy()
+   game.Lighting.ColorCorrection:Destroy()
+   game.Lighting.SunRays:Destroy()
+   game.Lighting.WaterBlur:Destroy()
+   game.Lighting.Atmosphere:Destroy()
+   game.Lighting.DepthOfField:Destroy()
+
+end)
+
+Section3Main:CreateButton("No NetPause Notification", function ()
+    game.CoreGui.RobloxNetworkPauseNotification:Destroy()
+end)
+
+Section3Main:CreateButton("No WaterEffect", function ()
+
+    game.Players.LocalPlayer.PlayerGui.WaterEffect:Destroy()
+
+ end)
+
+Section3Main:CreateButton("No Water + Lava + Acid", function ()
+ 
+    game.Workspace.World.Ocean.Water:Destroy()
+    game.Workspace.World.Regions.Gameplay.Damage.Lava:Destroy()
+    game.Workspace.World.Regions.Gameplay.Damage.Acid:Destroy()
+    game.Workspace.World.Regions.Gameplay.Damage:Destroy()
+ 
+    game.Players.LocalPlayer.PlayerGui.WaterEffect:Destroy()
+ 
+ end)
+
+ Section3Main:CreateButton("No Explodable Walls", function ()
+    game.Workspace.World.Regions.Gameplay.Explodables:Destroy()
+ end)
+
+local TeleportM = windowz:CreatePage("Teleports")
+
+local Section1TP = TeleportM:CreateSection("Stores")
+
+Section1TP:CreateButton("Oak Depot", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(165, 3, 153)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Mike's Mines", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(872, 3, -631)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Resource Hub", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(858, 3, 195)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Radical Shack", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(-1976, 52, -2080)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Illumine Designs", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(-3284, 100, 4085)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Classic Store", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(-1263, 597, 4847)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Lighthouse", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(-8, 61, -3286)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section1TP:CreateButton("Fungi Finds", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-1524, -1, 5535)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+local Section2TP = TeleportM:CreateSection("Wood/Stone Locations")
+
+Section2TP:CreateButton("Magma Trees", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(-930, -385, -276)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section2TP:CreateButton("Fungi Mushrooms", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-2047, 67, 5212)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+local Section3TP = TeleportM:CreateSection("Biomes")
+
+Section3TP:CreateButton("Acid", function ()
+
+   local teleport_table = {
+      location1 = Vector3.new(-3652, 561, -474)
+  }
+  
+  local tween_s = game:GetService('TweenService')
+  local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+  
+  local lp = game.Players.LocalPlayer
+  
+  function bypass_teleport(v)
+      if lp.Character and 
+      lp.Character:FindFirstChild('HumanoidRootPart') then
+          local cf = CFrame.new(v)
+          local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+          a:Play()
+      end
+  end
+  
+  bypass_teleport(teleport_table.location1)
+
+end)
+
+Section3TP:CreateButton("Red Sand", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-2958, 287, 1433)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Sand Pillar", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-3619, 279, 3770)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Sand Pillar (1)", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-2890, 369, 3706)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Sand Pillar (2)", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-2565, 369, 4308)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Sand Pillar (3)", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-1872, 344, 3968)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+ 
+ Section3TP:CreateButton("Grass", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-1140, 136, 2323)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Grass (2)", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(407, 96, -2349)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Spawn", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(212, 29, 123)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Beach", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-1330, 52, -2148)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section3TP:CreateButton("Beach (2)", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(1052, 119, 652)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ local Section4TP = TeleportM:CreateSection("Secrets")
+
+ Section4TP:CreateButton("Uncertainty Pickaxe Button", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-116, -223, -1689)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section4TP:CreateButton("Emberbane Axe Spot", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(1239, -16, -1841)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section4TP:CreateButton("Emberbane Axe Explodable Wall", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(1291, 63, -1968)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section4TP:CreateButton("Bridge Secret", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-707, -26, 183)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ local Section5TP = TeleportM:CreateSection("Pedestals")
+
+ Section5TP:CreateButton("Acid Pedestal", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-4110, 719, -502)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section5TP:CreateButton("Desert Pedestal", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-2352, 103, 3583)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section5TP:CreateButton("Grass Pedestal", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(-1141, 150, -695)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+ Section5TP:CreateButton("Grass Pedestal (Lighthouse)", function ()
+
+    local teleport_table = {
+       location1 = Vector3.new(362, 64, -2990)
+   }
+   
+   local tween_s = game:GetService('TweenService')
+   local tweeninfo = TweenInfo.new(1,Enum.EasingStyle.Linear)
+   
+   local lp = game.Players.LocalPlayer
+   
+   function bypass_teleport(v)
+       if lp.Character and 
+       lp.Character:FindFirstChild('HumanoidRootPart') then
+           local cf = CFrame.new(v)
+           local a = tween_s:Create(lp.Character.HumanoidRootPart,tweeninfo,{CFrame=cf})
+           a:Play()
+       end
+   end
+   
+   bypass_teleport(teleport_table.location1)
+ 
+ end)
+
+
+local FirefliesW = windowz:CreatePage("Fireflies")
+
+local FirefliesW1 = FirefliesW:CreateSection("Color Fireflies -- Normal TP")
+
+FirefliesW1:CreateButton("Yellow Fireflies -- Really Common", function ()
+
+for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Yellow" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+
+end)
+
+FirefliesW1:CreateButton("Green Fireflies -- Common", function ()
+
+for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Green" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+
+end)
+
+FirefliesW1:CreateButton("Red Fireflies -- Uncommon", function ()
+
+for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Red" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+
+end)
+
+FirefliesW1:CreateButton("Blue Fireflies -- Rare", function ()
+
+for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Blue" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+
+end)
+
+FirefliesW1:CreateButton("Purple Fireflies -- Epic", function ()
+
+for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Purple" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+
+end)
+
+local FirefliesW2 = FirefliesW:CreateSection("Color Fireflies -- Loop TP")
+
+FirefliesW2:CreateToggle("Yellow Fireflies -- Really Common", {Toggled=false , Description = false}, function(YELLOW)
+    shared["YELLOW"] = YELLOW
+    while shared["YELLOW"] do
+      task.wait (0.01)
+      if not shared["YELLOW"] then
+          break
+      end
+      for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+        if v:IsA("Part") and v.Name == "Yellow" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+   end
+ end)
+
+ FirefliesW2:CreateToggle("Green Fireflies -- Common", {Toggled=false , Description = false}, function(GREEN)
+ shared["GREEN"] = GREEN
+ while shared["GREEN"] do
+   task.wait (0.01)
+   if not shared["GREEN"] then
+       break
+   end
+   for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+     if v:IsA("Part") and v.Name == "Green" then
+         local player = game.Players.LocalPlayer.Character
+         local part = v
+         player.HumanoidRootPart.CFrame = part.CFrame
+     end
+ end
+end
+end)
+
+FirefliesW2:CreateToggle("Red Fireflies -- Uncommon", {Toggled=false , Description = false}, function(RED)
+shared["RED"] = RED
+while shared["RED"] do
+  task.wait (0.01)
+  if not shared["RED"] then
+      break
+  end
+  for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Red" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+end
+end)
+
+FirefliesW2:CreateToggle("Blue Fireflies -- Rare", {Toggled=false , Description = false}, function(BLUE)
+shared["BLUE"] = BLUE
+while shared["BLUE"] do
+  task.wait (0.01)
+  if not shared["BLUE"] then
+      break
+  end
+  for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Blue" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+end
+end)
+
+FirefliesW2:CreateToggle("Purple Fireflies -- Epic", {Toggled=false , Description = false}, function(PURPLE)
+shared["PURPLE"] = PURPLE
+while shared["PURPLE"] do
+  task.wait (0.01)
+  if not shared["PURPLE"] then
+      break
+  end
+  for i,v in pairs(workspace.World.MiscPrefabs:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "Purple" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+end
+end)
+
+local OreW = windowz:CreatePage("Ore TP")
+
+local OreW1 = OreW:CreateSection("AcidRock")
+
+OreW1:CreateButton("Uranium", function ()
+
+    for i,v in pairs(workspace.World.RockRegions.AcidRock:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Medium brown" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+
+end)
+
+OreW1:CreateButton("Greeb", function ()
+
+    for i,v in pairs(workspace.World.RockRegions.AcidRock:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Br. yellowish green" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+
+end)
+
+local OreW2 = OreW:CreateSection("FungiOre")
+
+OreW2:CreateButton("FungiViolet", function ()
+
+    for i,v in pairs(workspace.World.RockRegions.FungiOre:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Pastel violet" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+
+end)
+
+local TreeW = windowz:CreatePage("Tree TP")
+
+local TreeW1 = TreeW:CreateSection("Universal")
+
+TreeW1:CreateButton("Electrified Tree", function ()
+
+    for i,v in pairs(workspace.World.TreeRegions:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Bright bluish violet" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+
+end)
+
+TreeW1:CreateButton("Red Cactus", function ()
+
+    for i,v in pairs(workspace.World.TreeRegions:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Persimmon" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+
+end)
+
+local LoopW = windowz:CreatePage("Loop TP")
+
+local LoopW1 = LoopW:CreateSection("Universal -- Ore")
+
+LoopW1:CreateToggle("Rosa Flama Quartz", {Toggled=false , Description = false}, function(ROSA)
+shared["ROSA"] = ROSA
+while shared["ROSA"] do
+    task.wait(Random.new():NextNumber(0.5, 1))
+  if not shared["ROSA"] then
+      break
+  end
+  for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+    if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Carnation pink" then
+        local player = game.Players.LocalPlayer.Character
+        local part = v
+        player.HumanoidRootPart.CFrame = part.CFrame
+    end
+end
+end
+end)
+
+LoopW1:CreateToggle("Rose Gold", {Toggled=false , Description = false}, function(ROSE)
+    shared["ROSE"] = ROSE
+    while shared["ROSE"] do
+        task.wait(Random.new():NextNumber(0.5, 1))
+      if not shared["ROSE"] then
+          break
+      end
+      for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Salmon" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+    end
+    end)
+
+LoopW1:CreateToggle("Magnetite", {Toggled=false , Description = false}, function(MAGN)
+    shared["MAGN"] = MAGN
+    while shared["MAGN"] do
+        task.wait(Random.new():NextNumber(0.5, 1))
+      if not shared["MAGN"] then
+          break
+      end
+      for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Bright violet" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+    end
+    end)
+
+    LoopW1:CreateToggle("Mythril", {Toggled=false , Description = false}, function(MYTH)
+        shared["MYTH"] = MYTH
+        while shared["MYTH"] do
+            task.wait(Random.new():NextNumber(0.5, 1))
+          if not shared["MYTH"] then
+              break
+          end
+          for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+            if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Med. bluish green" then
+                local player = game.Players.LocalPlayer.Character
+                local part = v
+                player.HumanoidRootPart.CFrame = part.CFrame
+            end
+        end
+        end
+        end)
+
+    LoopW1:CreateToggle("FungiViolet", {Toggled=false , Description = false}, function(FUNG)
+        shared["FUNG"] = FUNG
+        while shared["FUNG"] do
+            task.wait(Random.new():NextNumber(0.5, 1))
+          if not shared["FUNG"] then
+              break
+          end
+          for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+            if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Pastel violet" then
+                local player = game.Players.LocalPlayer.Character
+                local part = v
+                player.HumanoidRootPart.CFrame = part.CFrame
+            end
+        end
+        end
+        end)
+
+        LoopW1:CreateToggle("Uranium", {Toggled=false , Description = false}, function(URAN)
+            shared["URAN"] = URAN
+            while shared["URAN"] do
+                task.wait(Random.new():NextNumber(0.5, 1))
+              if not shared["URAN"] then
+                  break
+              end
+    for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Medium brown" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+            end
+            end)
+
+            LoopW1:CreateToggle("Greeb", {Toggled=false , Description = false}, function(GREE)
+                shared["GREE"] = GREE
+                while shared["GREE"] do
+                    task.wait(Random.new():NextNumber(0.5, 1))
+                  if not shared["GREE"] then
+                      break
+                  end
+                  for i,v in pairs(workspace.World.RockRegions:GetDescendants()) do
+                    if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Br. yellowish green" then
+                        local player = game.Players.LocalPlayer.Character
+                        local part = v
+                        player.HumanoidRootPart.CFrame = part.CFrame
+                    end
+                end
+                end
+                end)
+
+local LoopW2 = LoopW:CreateSection("Universal -- Tree")
+
+LoopW2:CreateToggle("Electrified Tree", {Toggled=false , Description = false}, function(ELEC)
+    shared["ELEC"] = ELEC
+    while shared["ELEC"] do
+        task.wait(Random.new():NextNumber(0.5, 1))
+      if not shared["ELEC"] then
+          break
+      end
+      for i,v in pairs(workspace.World.TreeRegions:GetDescendants()) do
+        if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Bright bluish violet" then
+            local player = game.Players.LocalPlayer.Character
+            local part = v
+            player.HumanoidRootPart.CFrame = part.CFrame
+        end
+    end
+    end
+    end)
+
+    LoopW2:CreateToggle("Red Cactus", {Toggled=false , Description = false}, function(REDC)
+        shared["REDC"] = REDC
+        while shared["REDC"] do
+            task.wait(Random.new():NextNumber(0.5, 1))
+          if not shared["REDC"] then
+              break
+          end
+          for i,v in pairs(workspace.World.TreeRegions:GetDescendants()) do
+            if v:IsA("MeshPart") and v.BrickColor == BrickColor.new"Persimmon" then
+                local player = game.Players.LocalPlayer.Character
+                local part = v
+                player.HumanoidRootPart.CFrame = part.CFrame
+            end
+        end
+        end
+        end)
+
+
+
+local Marking1 = windowz:CreatePage("Marking")
+
+local Marking1S = Marking1:CreateSection("Marking")
+
+Marking1S:CreateButton("Set A Mark -- ONLY 1 (deletes previous)", function ()
+
+for i,v in pairs(workspace:GetDescendants()) do
+    if v:IsA("Part") and v.Name == "MARKING" then
+       v:Destroy()
+    else
+        
+    end
+end
+
+    local MARKINGPT = game.Players.LocalPlayer.Name
+    local CFMARKING = game.workspace[MARKINGPT].HumanoidRootPart.CFrame
+    local part = Instance.new("Part")
+    part.Name = "MARKING"
+    part.Anchored = true
+    part.CanCollide = false
+    part.Shape = Enum.PartType.Block
+    part.Color = Color3.new(1, 0, 0)
+    part.Parent = workspace
+    part.CFrame = CFMARKING
+
+    local light = Instance.new("PointLight")
+    light.Name = "PointLight"
+    light.Parent = workspace.MARKING
+    light.Brightness = 2.5
+    light.Range = 25
+    
+end)
+
+Marking1S:CreateButton("Delete Mark", function ()
+
+    for i,v in pairs(workspace:GetDescendants()) do
+        if v:IsA("Part") and v.Name == "MARKING" then
+           v:Destroy()
+        else
+            
+        end
+    end
+    
+end)
+
+Marking1S:CreateButton("Teleport To Mark", function ()
+
+    local player = game.Players.LocalPlayer.Character
+    local part = game.Workspace.MARKING
+    player.HumanoidRootPart.CFrame = part.CFrame
+    
+end)
